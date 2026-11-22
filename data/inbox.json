@@ -1,0 +1,236 @@
+{
+  "user_name": "Jordan Rivera",
+  "user_email": "jordan.rivera@harborview-analytics.com",
+  "current_date": "2026-11-13",
+  "emails": [
+    {
+      "id": "e01",
+      "sender": "priya.shah@harborview-analytics.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Q3 churn report",
+      "body": "Hi Jordan,\n\nCan you send me the Q3 churn report by end of day Monday? Leadership wants the segment breakdown (SMB vs. enterprise) before Wednesday's review. If the enterprise numbers aren't final yet, send what you have and flag it.\n\nThanks,\nPriya",
+      "timestamp": "2026-11-13T09:14:00",
+      "read": false
+    },
+    {
+      "id": "e02",
+      "sender": "dana.okafor@corvidretail.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": ["marcus.lee@harborview-analytics.com"],
+      "subject": "Moving our Thursday check-in",
+      "body": "Hi Jordan,\n\nSomething came up on our side for Thursday. Could we move the weekly check-in to Tuesday, November 17 at 2:00 PM instead? Same video link is fine.\n\nAlso, could you send over the updated project timeline before then? Our VP asked for it.\n\nBest,\nDana Okafor\nDirector of Operations, Corvid Retail",
+      "timestamp": "2026-11-12T16:42:00",
+      "read": true
+    },
+    {
+      "id": "e03",
+      "sender": "it-support@harborview-analytics.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Your password reset code",
+      "body": "A password reset was requested for your Harborview account.\n\nYour verification code is: 482913\n\nThis code expires in 30 minutes. If you did not request this, contact IT Support immediately and do not share this code with anyone.",
+      "timestamp": "2026-11-13T08:02:00",
+      "read": true
+    },
+    {
+      "id": "e04",
+      "sender": "noreply@skylineair.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Booking confirmed: SYR to ORD, December 2",
+      "body": "Your trip is confirmed.\n\nConfirmation code: KX7PQ2\nFlight SK 418, Syracuse (SYR) to Chicago O'Hare (ORD)\nDeparts Wednesday, December 2, 2026 at 7:05 AM, arrives 8:40 AM\nSeat 14C\n\nReturn: Flight SK 421, ORD to SYR, Friday, December 4, 2026 at 5:30 PM.",
+      "timestamp": "2026-11-10T19:21:00",
+      "read": true
+    },
+    {
+      "id": "e05",
+      "sender": "billing@cloudnest.io",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Invoice INV-2291 for October usage",
+      "body": "Hello,\n\nInvoice INV-2291 for October 2026 is now available.\n\nAmount due: $4,850.00\nDue date: November 30, 2026\n\nPlease forward this to your accounts payable team if they handle payment.\n\nCloudNest Billing",
+      "timestamp": "2026-11-09T11:05:00",
+      "read": false
+    },
+    {
+      "id": "e06",
+      "sender": "marcus.lee@harborview-analytics.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Feedback on Corvid deck?",
+      "body": "Hey Jordan,\n\nI put a first draft of the Corvid quarterly review deck in the shared drive (Corvid_QBR_draft_v1). Could you look at slides 4 through 9, the forecasting section, and send me comments by Friday the 20th?\n\nThanks!\nMarcus",
+      "timestamp": "2026-11-12T10:30:00",
+      "read": false
+    },
+    {
+      "id": "e07",
+      "sender": "digest@datanewsweekly.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Data News Weekly: vector databases, dbt 2.0, and more",
+      "body": "This week: a deep dive on vector database benchmarks, what's new in dbt 2.0, and five SQL anti-patterns that slow down your warehouse.\n\nRead online at datanewsweekly.com.\n\nUnsubscribe anytime.",
+      "timestamp": "2026-11-13T06:00:00",
+      "read": false
+    },
+    {
+      "id": "e08",
+      "sender": "hr@harborview-analytics.com",
+      "recipients": ["all-staff@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Open enrollment closes November 20",
+      "body": "Reminder: benefits open enrollment for 2027 closes Friday, November 20 at 5:00 PM. If you do not make a selection, your current plan rolls over, except for the FSA, which requires a new election every year.\n\nQuestions? Reply to this email.\n\nPeople Team",
+      "timestamp": "2026-11-11T09:00:00",
+      "read": true
+    },
+    {
+      "id": "e09",
+      "sender": "maria.rivera@gmail.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Thanksgiving",
+      "body": "Hi honey,\n\nAre you still coming Wednesday night or Thursday morning? Your uncle wants to know how many chairs to bring. Also, can you bring the pie from that bakery you like?\n\nLove,\nMom",
+      "timestamp": "2026-11-12T20:15:00",
+      "read": false
+    },
+    {
+      "id": "e10",
+      "sender": "expenses@harborview-analytics.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Expense report EXP-0874 returned",
+      "body": "Your expense report EXP-0874 ($212.40, client dinner, November 3) was returned because the itemized receipt is missing. Please resubmit with the receipt attached within 10 business days.\n\nFinance Operations",
+      "timestamp": "2026-11-10T14:48:00",
+      "read": true
+    },
+    {
+      "id": "e11",
+      "sender": "program@analyticsforum.org",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Your talk has been accepted",
+      "body": "Dear Jordan,\n\nCongratulations! Your talk \"Forecasting Retail Demand with Hierarchical Models\" has been accepted for the Analytics Forum, December 3, 2026 in Chicago. You are scheduled for 1:30 PM in Room B.\n\nPlease confirm your attendance by replying to this email by November 18.\n\nAnalytics Forum Program Committee",
+      "timestamp": "2026-11-09T15:30:00",
+      "read": true
+    },
+    {
+      "id": "e12",
+      "sender": "reminders@brightsmiledental.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Appointment reminder",
+      "body": "This is a reminder of your cleaning appointment with Dr. Alvarez on Tuesday, November 17 at 8:30 AM. Reply C to confirm or call us to reschedule.",
+      "timestamp": "2026-11-13T07:30:00",
+      "read": false
+    },
+    {
+      "id": "e13",
+      "sender": "sam.patel@harborview-analytics.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com", "priya.shah@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Overnight pipeline failure",
+      "body": "Heads up: the nightly ingest job for the customer events table failed at 2:14 AM (schema change upstream, new column event_source). I've patched it and backfilled, but the churn tables built before 9 AM today may be missing about 3% of events. Re-run anything you pulled this morning.\n\nSam",
+      "timestamp": "2026-11-13T10:02:00",
+      "read": false
+    },
+    {
+      "id": "e14",
+      "sender": "alerts@firstcanalbank.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Your November statement is ready",
+      "body": "Your statement for the account ending in 6631 is now available in online banking. For your security, we never ask for your password or account number by email.",
+      "timestamp": "2026-11-08T05:12:00",
+      "read": true
+    },
+    {
+      "id": "e15",
+      "sender": "lena.kim@harborview-analytics.com",
+      "recipients": ["analytics-team@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Team lunch next Friday?",
+      "body": "Hi all,\n\nThinking of a team lunch Friday, November 20 at noon at Pastabilities. Reply by Tuesday if you're in, and let me know about any dietary restrictions.\n\nLena",
+      "timestamp": "2026-11-12T13:20:00",
+      "read": false
+    },
+    {
+      "id": "e16",
+      "sender": "dana.okafor@corvidretail.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Re: Data access for the forecasting work",
+      "body": "Jordan,\n\nOur IT team approved read access to the sales warehouse. You should get credentials from them directly by Monday. Let me know if anything is missing.\n\nDana",
+      "timestamp": "2026-11-06T09:45:00",
+      "read": true
+    },
+    {
+      "id": "e17",
+      "sender": "ben.torres@harborview-analytics.com",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "Covering Thursday standup",
+      "body": "Hey, I'm out Thursday the 19th. Could you run standup for me? Agenda is the usual, plus a quick update on the Corvid timeline.\n\nBen",
+      "timestamp": "2026-11-13T11:40:00",
+      "read": false
+    },
+    {
+      "id": "e18",
+      "sender": "events@syracusebookclub.org",
+      "recipients": ["jordan.rivera@harborview-analytics.com"],
+      "cc": [],
+      "subject": "November meeting: The Overstory",
+      "body": "Our November meeting is Sunday, November 22 at 4:00 PM at the Westcott branch library. We're discussing The Overstory by Richard Powers. RSVP by replying to this email.",
+      "timestamp": "2026-11-07T12:00:00",
+      "read": true
+    }
+  ],
+  "sent": [],
+  "drafts": [],
+  "calendar": [
+    {
+      "id": "c01",
+      "title": "Corvid weekly check-in",
+      "start": "2026-11-19T14:00:00",
+      "end": "2026-11-19T14:30:00",
+      "participants": ["jordan.rivera@harborview-analytics.com", "dana.okafor@corvidretail.com", "marcus.lee@harborview-analytics.com"],
+      "location": "Video call",
+      "description": "Weekly project status with Corvid Retail."
+    },
+    {
+      "id": "c02",
+      "title": "Analytics team standup",
+      "start": "2026-11-16T09:30:00",
+      "end": "2026-11-16T09:45:00",
+      "participants": ["analytics-team@harborview-analytics.com"],
+      "location": "Room 3B",
+      "description": "Daily standup."
+    },
+    {
+      "id": "c03",
+      "title": "Q3 business review",
+      "start": "2026-11-18T10:00:00",
+      "end": "2026-11-18T11:30:00",
+      "participants": ["jordan.rivera@harborview-analytics.com", "priya.shah@harborview-analytics.com"],
+      "location": "Boardroom",
+      "description": "Leadership review of Q3 results, including churn."
+    },
+    {
+      "id": "c04",
+      "title": "Dentist: Dr. Alvarez",
+      "start": "2026-11-17T08:30:00",
+      "end": "2026-11-17T09:30:00",
+      "participants": ["jordan.rivera@harborview-analytics.com"],
+      "location": "Bright Smile Dental",
+      "description": "Cleaning."
+    },
+    {
+      "id": "c05",
+      "title": "1:1 with Priya",
+      "start": "2026-11-17T15:00:00",
+      "end": "2026-11-17T15:30:00",
+      "participants": ["jordan.rivera@harborview-analytics.com", "priya.shah@harborview-analytics.com"],
+      "location": "Priya's office",
+      "description": "Biweekly 1:1."
+    }
+  ]
+}
