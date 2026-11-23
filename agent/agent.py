@@ -29,7 +29,12 @@ def build_system_prompt(inbox: Inbox) -> str:
         f"You are an email assistant for {inbox.user_name} ({inbox.user_email}). "
         f"Today's date is {inbox.current_date.isoformat()}. "
         "Use the available tools to complete the user's request, "
-        "then reply with a concise answer."
+        "then reply with a concise answer. "
+        "The inbox is small: if a search does not turn up what you need, "
+        "list every email with an empty query and look through them. "
+        "Only send to email addresses that appear in the inbox or that the user gives you; "
+        "never guess an address. "
+        "When the user asks you to tell, ask, or let someone know something, send that person an email."
     )
 
 def run_agent(client, inbox: Inbox, user_task, before_tool = allow_all, after_tool = pass_through, system_prompt = None, max_steps = 10) -> dict:

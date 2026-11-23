@@ -2,10 +2,15 @@ from datetime import datetime, time
 from agent.inbox import Inbox, Email
 import json
 
+#Filler words that would otherwise match nearly every email
+STOPWORDS = {"a", "an", "the", "and", "or", "of", "to", "for", "from", "in", "on", "at", "by",
+             "my", "me", "i", "is", "are", "any", "about", "with", "what", "email", "emails"}
+
+
 def search_emails(inbox: Inbox, query: str, unread_only: bool = False) -> list[dict]:
 
-    #Lowercase query
-    query_lowered = query.lower()
+    #Split the query into lowercase words and drop filler; no words left means list everything
+    query_words = [word for word in query.lower().split() if word not in STOPWORDS]
 
     emails_found = []
 
@@ -15,14 +20,23 @@ def search_emails(inbox: Inbox, query: str, unread_only: bool = False) -> list[d
         if unread_only and email.read:
             continue
 
-        if query_lowered in email.sender.lower() or query_lowered in email.subject.lower() or query_lowered in email.body.lower():
+        searchable = f"{email.sender} {email.subject} {email.body}".lower()
+
+        #Ranked search: count how many query words appear anywhere in the email
+        matches = sum(word in searchable for word in query_words)
+
+        #Keep an email if it matches at least one word (or if there were no words to match)
+        if matches > 0 or not query_words:
 
             #Constructing summary of email
             email_summary = email.model_dump(mode = "json", include = ["id", "sender", "subject", "timestamp", "read"])
 
-            emails_found.append(email_summary)
+            emails_found.append((matches, email_summary))
 
-    return sorted(emails_found, key = lambda x: x['timestamp'], reverse = True)
+    #Best matches first, newest first among ties
+    emails_found.sort(key = lambda pair: (pair[0], pair[1]['timestamp']), reverse = True)
+
+    return [summary for _, summary in emails_found]
 
 
 def read_email(inbox: Inbox, email_id: str) -> dict | str:
@@ -50,6 +64,13 @@ def send_email(inbox: Inbox, recipients: list[str], subject: str, body: str) -> 
 
         return "Error: Recipients list is empty"
 
+    #Reject anything that is not a full address, like "dana" instead of dana.okafor@corvidretail.com
+    invalid = [r for r in recipients if "@" not in r or "." not in r.split("@")[-1]]
+
+    if invalid:
+
+        return f"Error: not valid email addresses: {invalid}. Look up the full address in the inbox."
+
     new_id = 's' + str(len(inbox.sent) + 1)
 
     timestamp = datetime.combine(inbox.current_date, time(13,2))
@@ -73,14 +94,14 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "search_emails",
-            "description": "Search the user's inbox. Returns a summary (id, sender, subject, timestamp, read) of each matching email, newest first, without the body.",
+            "description": "Search the user's inbox. Returns a summary (id, sender, subject, timestamp, read) of each matching email, best match first, without the body.",
             "strict": True,
             "parameters": {
                 "type": "object",
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "Plain text matched case-insensitively against sender, subject and body. Search operators such as is:unread or from: are not supported. An empty string matches every email."
+                        "description": "Words to search for, case-insensitive. An email matches when any word appears in its sender, subject or body; emails matching more words rank higher. Search operators such as is:unread or from: are not supported. An empty string lists every email."
                     },
                     "unread_only": {
                         "type": "boolean",
