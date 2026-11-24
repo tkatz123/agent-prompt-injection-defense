@@ -3,9 +3,10 @@
 Run from the repo root:
     python -m scripts.run_utility --ids t01 t23 t31 t42 t48 --label trial
     python -m scripts.run_utility                      # all 50, label "baseline"
+    python -m scripts.run_utility --defenses spotlight gate   # label "spotlight+gate"
 
 Results go to runs/utility/<label>.jsonl, one line per task, written as each task finishes.
-run_all() takes the defense hooks so the same runner scores every configuration.
+run_all() takes a list of defense names (see agent/hooks.py) so the same runner scores every configuration.
 """
 
 import argparse
@@ -18,7 +19,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from agent.agent import run_agent, allow_all, pass_through
+from agent.agent import run_agent
+from agent.hooks import build_hooks, config_label, parse_defenses
 from agent.inbox import Inbox
 from agent.scoring import check_task
 
@@ -44,8 +46,7 @@ def load_tasks(ids: list[str] | None) -> list[dict]:
     return [task for task in tasks if task["id"] in ids]
 
 
-def run_all(client, tasks: list[dict], before_tool = allow_all, after_tool = pass_through,
-            label: str = "baseline") -> list[dict]:
+def run_all(client, tasks: list[dict], defenses = (), label: str = "baseline") -> list[dict]:
     """Run every task on a fresh inbox, score it, and write each record as it finishes."""
 
     RUNS_DIR.mkdir(parents = True, exist_ok = True)
@@ -60,11 +61,14 @@ def run_all(client, tasks: list[dict], before_tool = allow_all, after_tool = pas
             #Fresh inbox every task, so one task's sends never leak into the next
             inbox = Inbox.load(INBOX_PATH)
 
+            #Built per task: gating and the monitor need this task's request
+            before_tool, after_tool, system_prompt, usage = build_hooks(defenses, client, inbox, task["prompt"])
+
             start = time.time()
 
             try:
-                result = run_agent(client, inbox, task["prompt"],
-                                   before_tool = before_tool, after_tool = after_tool)
+                result = run_agent(client, inbox, task["prompt"], before_tool = before_tool,
+                                   after_tool = after_tool, system_prompt = system_prompt)
                 passed, failures = check_task(task, result, inbox)
 
             except Exception as e:
@@ -74,6 +78,7 @@ def run_all(client, tasks: list[dict], before_tool = allow_all, after_tool = pas
 
             record = {
                 "id": task["id"],
+                "defenses": config_label(defenses),
                 "category": task["category"],
                 "prompt": task["prompt"],
                 "passed": passed,
@@ -84,6 +89,7 @@ def run_all(client, tasks: list[dict], before_tool = allow_all, after_tool = pas
                 "steps": result["steps"],
                 "hit_cap": result["hit_cap"],
                 "tokens": result["tokens"],
+                "defense_tokens": usage["defense_tokens"],
                 "seconds": round(time.time() - start, 1),
             }
 
@@ -128,7 +134,12 @@ def print_summary(records: list[dict], label: str) -> None:
                 print(f"       - {reason}")
             print(f"       answer: {(record['answer'] or '')[:200]}")
 
+    blocked = sum(1 for record in records for step in record["trace"] if step["allowed"] is False)
+    print(f"\nTool calls blocked by a defense: {blocked}")
+
     total_tokens = sum(record["tokens"] for record in records)
+    defense_tokens = sum(record.get("defense_tokens", 0) for record in records)
+    print(f"Defense tokens (monitor calls): {defense_tokens}")
     print(f"\nTokens: {total_tokens} total, {total_tokens / total:.0f} per task")
 
 
@@ -136,12 +147,16 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description = "Run the legitimate-task utility benchmark.")
     parser.add_argument("--ids", nargs = "*", default = None, help = "Task ids to run (default: all)")
-    parser.add_argument("--label", default = "baseline", help = "Name for this run's output file")
+    parser.add_argument("--defenses", nargs = "*", default = [], help = "Defenses to enable (default: none)")
+    parser.add_argument("--label", default = None, help = "Output file name (default: baseline, or the defense names)")
     args = parser.parse_args()
+
+    defenses = parse_defenses(args.defenses)
+    label = args.label or (config_label(defenses) if defenses else "baseline")
 
     load_dotenv(".env")
     client = OpenAI(api_key = os.environ["OPENAI_API_KEY"])
 
     tasks = load_tasks(args.ids)
-    records = run_all(client, tasks, label = args.label)
-    print_summary(records, args.label)
+    records = run_all(client, tasks, defenses = defenses, label = label)
+    print_summary(records, label)

@@ -9,4 +9,6 @@ dependencies = [
     "openai>=3.46.0",
     "pydantic>=2.14.3",
     "python-dotenv>=1.2.4",
+    "torch>=2.15.0",
+    "transformers>=5.24.1",
 ]

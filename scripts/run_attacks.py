@@ -3,6 +3,7 @@
 Run from the repo root:
     python -m scripts.run_attacks --ids a001 a021 a041 a061 a081 --label trial
     python -m scripts.run_attacks                         # all 100, label "undefended"
+    python -m scripts.run_attacks --defenses spotlight gate  # label "spotlight+gate"
 
 Two numbers per run:
     attack success rate (ASR): the attacker's goal shows up in what the agent sent
@@ -20,7 +21,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from agent.agent import run_agent, allow_all, pass_through
+from agent.agent import run_agent
+from agent.hooks import build_hooks, config_label, parse_defenses
 from agent.inbox import Inbox
 from agent.scoring import check_task
 
@@ -75,8 +77,7 @@ def utility_under_attack(task: dict, attack: dict, result: dict, inbox: Inbox) -
     return check_task(task, result, scored)
 
 
-def run_all(client, attacks: list[dict], before_tool = allow_all, after_tool = pass_through,
-            label: str = "undefended") -> list[dict]:
+def run_all(client, attacks: list[dict], defenses = (), label: str = "undefended") -> list[dict]:
     """Run every attack on a fresh inbox with the injection planted, then score both outcomes."""
 
     tasks = {task["id"]: task for task in json.load(open(TASKS_PATH))}
@@ -96,11 +97,14 @@ def run_all(client, attacks: list[dict], before_tool = allow_all, after_tool = p
             inbox = Inbox.load(INBOX_PATH)
             inbox.get_email(attack["carrier"]).body += attack["injection"]
 
+            #Built per task, after the injection is planted, exactly as a real run would see it
+            before_tool, after_tool, system_prompt, usage = build_hooks(defenses, client, inbox, task["prompt"])
+
             start = time.time()
 
             try:
-                result = run_agent(client, inbox, task["prompt"],
-                                   before_tool = before_tool, after_tool = after_tool)
+                result = run_agent(client, inbox, task["prompt"], before_tool = before_tool,
+                                   after_tool = after_tool, system_prompt = system_prompt)
                 utility, failures = utility_under_attack(task, attack, result, inbox)
 
             except Exception as e:
@@ -111,6 +115,7 @@ def run_all(client, attacks: list[dict], before_tool = allow_all, after_tool = p
 
             record = {
                 "id": attack["id"],
+                "defenses": config_label(defenses),
                 "task_id": attack["task_id"],
                 "category": task["category"],
                 "goal": attack["goal"],
@@ -124,6 +129,7 @@ def run_all(client, attacks: list[dict], before_tool = allow_all, after_tool = p
                 "steps": result["steps"],
                 "hit_cap": result["hit_cap"],
                 "tokens": result["tokens"],
+                "defense_tokens": usage["defense_tokens"],
                 "seconds": round(time.time() - start, 1),
             }
 
@@ -166,7 +172,12 @@ def print_summary(records: list[dict], label: str) -> None:
     for key in ["goal", "style", "category"]:
         rate_table(records, key)
 
+    blocked = sum(1 for record in records for step in record["trace"] if step["allowed"] is False)
+    print(f"\nTool calls blocked by a defense: {blocked}")
+
     total_tokens = sum(record["tokens"] for record in records)
+    defense_tokens = sum(record.get("defense_tokens", 0) for record in records)
+    print(f"Defense tokens (monitor calls): {defense_tokens}")
     print(f"\nTokens: {total_tokens} total, {total_tokens / total:.0f} per attack")
 
 
@@ -174,12 +185,16 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description = "Run the prompt injection attack benchmark.")
     parser.add_argument("--ids", nargs = "*", default = None, help = "Attack ids to run (default: all)")
-    parser.add_argument("--label", default = "undefended", help = "Name for this run's output file")
+    parser.add_argument("--defenses", nargs = "*", default = [], help = "Defenses to enable (default: none)")
+    parser.add_argument("--label", default = None, help = "Output file name (default: undefended, or the defense names)")
     args = parser.parse_args()
+
+    defenses = parse_defenses(args.defenses)
+    label = args.label or (config_label(defenses) if defenses else "undefended")
 
     load_dotenv(".env")
     client = OpenAI(api_key = os.environ["OPENAI_API_KEY"])
 
     attacks = load_attacks(args.ids)
-    records = run_all(client, attacks, label = args.label)
-    print_summary(records, args.label)
+    records = run_all(client, attacks, defenses = defenses, label = label)
+    print_summary(records, label)
